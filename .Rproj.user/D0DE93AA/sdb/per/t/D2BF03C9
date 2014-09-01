@@ -1,0 +1,16 @@
+{
+    "contents" : "data<- 'https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip'\ndata.dir<- './UCI HAR Dataset'\ndata.file<- './original-dataset.zip'\ntidy.data<- './tidy UCI HAR.csv'\nmean.data<- './mean UCI HAR.txt'\nmean.data1<- './mean UCI HAR.csv'\nlibrary(reshape2)\n\n## Download file if needed\nif(file.exists(data.file)==FALSE){\n        download.file(data, destfile= data.file, method=\"curl\")\n}\n\n## Unzip file if needed\nif ( file.exists(data.dir)==FALSE){\n        unzip(data.file)\n}\n\n## Read activities and features\nactivity<- read.table(paste(data.dir, \"activity_labels.txt\", sep=\"/\"), header=F)\nnames(activity)<- c(\"ID\", \"Name\")\nfeatures<- read.table(paste(data.dir, \"features.txt\", sep=\"/\"), header=F)\nnames(features)<- c(\"ID\", \"Name\")\n\n## Read test files\ntest.x<-read.table(paste(data.dir, \"test\", \"X_test.txt\", sep=\"/\"), header=F)\ntest.y<-read.table(paste(data.dir, \"test\", \"y_test.txt\", sep=\"/\"), header=F)\ntest.subject<- read.table(paste(data.dir, \"test\", \"subject_test.txt\", \n                                sep=\"/\"), header=F)\nnames(test.x)<- features$Name\nnames(test.y)<- \"Activity\"\nnames(test.subject)<- \"Subject\"\n\n## Read train files\ntrain.x<-read.table(paste(data.dir, \"train\", \"X_train.txt\", sep=\"/\"), header=F)\ntrain.y<-read.table(paste(data.dir, \"train\", \"y_train.txt\", sep=\"/\"), header=F)\ntrain.subject<- read.table(paste(data.dir, \"train\", \"subject_train.txt\", \n                                sep=\"/\"), header=F)\nnames(train.x)<- features$Name\nnames(train.y)<- \"Activity\"\nnames(train.subject)<- \"Subject\"\n\n## Merge train and test\n## Excercis 1:\n## Merges the training and the test sets to create one data set.\ndata.x<- rbind(train.x, test.x)\ndata.y<- rbind(train.y, test.y)\ndata.s<- rbind(train.subject, test.subject)\n\n## Excercise 2:\n## Extracts only the measurements on the mean and \n## standard deviation for each measurement. \ndata.x<- data.x[,grep(\"mean|std\", features$Name)]\n\n## Excercise 3:\n## Uses descriptive activity names to name the activities in the data set\ndata.y$Activity<- activity[data.y$Activity, ]$Name\n\n## Excercise 4:\n## Appropriately labels the data set with descriptive variable names\nfull.data<- cbind(data.s, data.y, data.x)\nwrite.csv(full.data, tidy.data)\n\n## Excercise 5:\n## Creates a second, independent tidy data set with \n## the average of each variable for each activity and each subject.\ndata.mean<- aggregate(full.data, \n                      by=list(Activity=full.data$Activity, Subject=full.data$Subject), \n                      mean)\ndata.mean[,3]=NULL\ndata.mean[,3]=NULL\nwrite.table(data.mean, mean.data, row.name=F)\nwrite.csv(data.mean, mean.data1, row.name=T)\n",
+    "created" : 1409612995751.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2927870949",
+    "id" : "D2BF03C9",
+    "lastKnownWriteTime" : 1408920455,
+    "path" : "~/Desktop/Coursera/Data Certification/3_Getting an Cleaning Data/Week3/Peer_Assessment1/run_analysis.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

@@ -1,0 +1,17 @@
+{
+    "contents" : "## Getting and clanning data\n## Quiz 4, Week 4\n\n## Question 1\n## The American Community Survey distributes downloadable data about United States \n## communities. Download the 2006 microdata survey about housing for the state of\n## Idaho using download.file() from here: \n\nfile.url<- \"https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv\"\ndownload.file(file.url, destfile=\"q1.csv\", method=\"curl\")\nq1<- read.csv(\"q1.csv\")\n\n## Apply strsplit() to split all the names of the data frame on the characters \"wgtp\".\n## What is the value of the 123 element of the resulting list?\n\nansw1<- strsplit(names(q1), \"wgtp\")\nansw1[123]\n\n## Question 2\n## Load the Gross Domestic Product data for the 190 ranked countries in this data set:\n\nfile.url2<- \"https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv\"\ndownload.file(file.url2, destfile=\"q2.csv\", method=\"curl\")\nq2<- read.csv(\"q2.csv\")\n\n## Remove the commas from the GDP numbers in millions of dollars and average them. \n## What is the average? \n\nnewq2<- q2[5:235,]\nnewq2<- newq2[1:190,]\nnames(newq2)<- c(\"ID_C\", \"Ranking\", \"NA\", \"Country\", \"GDP\", \n                 \"NA\", \"NA\", \"NA\", \"NA\", \"NA\")\nnewq2$GDP<- gsub(\",\", \"\", as.character(newq2$GDP))\nmean(as.numeric(newq2$GDP))\n\n## Quistion 3\n## In the data set from Question 2 what is a regular expression that would \n## allow you to count the number of countries whose name begins with \n## \"United\"? Assume that the variable with the country names in it \n## is named countryNames. How many countries begin with United?\n\ngrep(\"^United\",newq2$Country)\n\n## Question 4\n## Load the Gross Domestic Product data for the 190 ranked countries in this data set: \n## Load the educational data from this data set: \n\nfile.url4<- \"https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv\"\ndownload.file(file.url4, destfile=\"q4.csv\", method=\"curl\")\nq4<- read.csv(\"q4.csv\")\n\nq4$CountryCode<- as.character(q4$CountryCode)\ntemp<-intersect(q4$CountryCode, newq2$ID_C)\nnewq4<-data.frame()\nfor (i in 1:length(temp)){\n        temp2<- q4[q4$CountryCode==temp[i],]\n        newq4<-rbind(newq4,temp2)\n}\ngrep(\"Fiscal year end: June\", newq4$Special.Notes)\n\n## Question 5\n## How many values were collected in 2012? How many values were collected \n## on Mondays in 2012?\n\ninstall.packages(\"quantmod\")\nlibrary(quantmod)\namzn = getSymbols(\"AMZN\",auto.assign=FALSE)\ndate<-index(amzn) ## crating a list with the values from Index\nyear<-grep(\"*2012\", date) ## Create vector with the 2012 values\nyear<- date[year] ## Create list with only 2012 values\nlength(year)\ndays<-weekdays(year) ## Converting into days of the week\nsum(days==\"Monday\") ## Calculate how many mondays.\n",
+    "created" : 1409513384951.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4017752735",
+    "id" : "DE287C2C",
+    "lastKnownWriteTime" : 1409524352,
+    "path" : "~/Desktop/Coursera/Data Certification/3_Getting an Cleaning Data/Week4/q4/q4_code.R",
+    "project_path" : "q4_code.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
